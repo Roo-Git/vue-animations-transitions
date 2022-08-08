@@ -13,7 +13,12 @@
 </template>
 
 <script>
+import BaseModal from "@/components/BaseModal.vue";
 export default {
+  name: "App",
+  components: {
+    BaseModal,
+  },
   data() {
     return { dialogIsVisible: false, animateTheBlock: false };
   },
