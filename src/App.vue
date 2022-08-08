@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <list-data></list-data>
+  </div>
+  <div class="container">
     <div class="block" :class="{ animate: animateTheBlock }"></div>
     <button @click="animatedBlock">Animate</button>
   </div>
@@ -37,10 +40,12 @@
 
 <script>
 import BaseModal from "@/components/BaseModal.vue";
+import ListData from "@/components/ListData.vue";
 export default {
   name: "App",
   components: {
     BaseModal,
+    ListData,
   },
   data() {
     return {
