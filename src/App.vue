@@ -12,6 +12,8 @@
       @after-enter="afterEnter"
       @leave="leave"
       @after-leave="afterLeave"
+      @enter-cancelled="enterCancelled"
+      @leave-cancelled="leaveCancelled"
     >
       <p v-if="paragraphIsVisible">This is only sometimes visible...</p>
     </transition>
@@ -45,28 +47,60 @@ export default {
       animateTheBlock: false,
       paragraphIsVisible: false,
       usersAreVisible: false,
+      enterInterval: null,
+      leaveInterval: null,
     };
   },
   methods: {
+    enterCancelled(el) {
+      console.log("enter-cancelled");
+      console.log(el);
+      clearInterval(this.enterInterval);
+    },
+    leaveCancelled(el) {
+      console.log("leave-cancelled");
+      console.log(el);
+      clearInterval(this.leaveInterval);
+    },
     beforeEnter(el) {
       console.log("before-enter");
       console.log(el);
+      el.style.opacity = 0;
+    },
+    enter(el, done) {
+      console.log("enter");
+      console.log(el);
+      let round = 1;
+      this.enterInterval = setInterval(() => {
+        el.style.opacity = round * 0.01;
+        round++;
+        if (round > 100) {
+          clearInterval(this.enterInterval);
+          done();
+        }
+      }, 20);
     },
     beforeLeave(el) {
       console.log("before-leave");
       console.log(el);
-    },
-    enter(el) {
-      console.log("enter");
-      console.log(el);
+      el.style.opacity = 1;
     },
     afterEnter(el) {
       console.log("after-enter");
       console.log(el);
     },
-    leave(el) {
+    leave(el, done) {
       console.log("leave");
       console.log(el);
+      let round = 1;
+      this.leaveInterval = setInterval(() => {
+        el.style.opacity = 1 - round * 0.01;
+        round++;
+        if (round > 100) {
+          clearInterval(this.leaveInterval);
+          done();
+        }
+      }, 10);
     },
     afterLeave(el) {
       console.log("after-leave");
@@ -141,6 +175,8 @@ button:active {
   animation: slide-fade 3s ease-out forwards;
 }
 
+/*
+
 .paragraph-enter-from {
   opacity: 0;
   transform: translateY(-30px);
@@ -165,6 +201,7 @@ button:active {
   transform: translateY(30px);
 }
 
+*/
 .fade-button-enter-from,
 .fade-button-leave-to {
   opacity: 0;
